@@ -1,0 +1,10 @@
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.csproj.AssemblyReference.cache
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.MainForm.resources
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.Properties.Resources.resources
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.csproj.GenerateResource.cache
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.csproj.CoreCompileInputs.cache
+C:\Users\THANH DAT\source\repos\File_System\bin\Debug\File_System.exe.config
+C:\Users\THANH DAT\source\repos\File_System\bin\Debug\File_System.exe
+C:\Users\THANH DAT\source\repos\File_System\bin\Debug\File_System.pdb
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.exe
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.pdb
