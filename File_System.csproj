@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FAT.cs" />
+    <Compile Include="Inode.cs" />
     <Compile Include="InodeBasedFS.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

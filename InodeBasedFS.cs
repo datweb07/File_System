@@ -8,22 +8,6 @@ namespace File_System
 {
     public class InodeBasedFS
     {
-        private class Inode
-        {
-            public string FileName { get; set; }
-            public int Size { get; set; }
-            public List<int> Blocks { get; set; }
-            public DateTime CreationTime { get; set; }
-
-            public Inode(string fileName, int size)
-            {
-                FileName = fileName;
-                Size = size;
-                Blocks = new List<int>();
-                CreationTime = DateTime.Now;
-            }
-        }
-
         private List<Inode> inodes;
         private bool[] blockMap;
         private int blockSize;
