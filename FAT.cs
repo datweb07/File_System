@@ -8,10 +8,10 @@ namespace File_System
 {
     public class FAT
     {
-        private List<string> fatTable;
-        private Dictionary<int, string> files;
-        private int clusterSize;
-        private int maxClusters;
+        public List<string> fatTable;
+        public Dictionary<int, string> files;
+        public int clusterSize;
+        public int maxClusters;
 
         public FAT(int clusterSize = 4096, int maxClusters = 100)
         {
@@ -22,7 +22,7 @@ namespace File_System
             InitializeFAT();
         }
 
-        private void InitializeFAT()
+        public void InitializeFAT()
         {
             for (int i = 0; i < maxClusters; i++)
             {
@@ -32,6 +32,7 @@ namespace File_System
 
         public bool CreateFile(string fileName, int size)
         {
+            // Math.Ceiling làm tròn lên số nguyên gấn nhất (nếu có phần thập phân)
             int clustersNeeded = (int)Math.Ceiling((double)size / clusterSize);
             List<int> freeClusters = new List<int>();
 
@@ -52,7 +53,16 @@ namespace File_System
             // Allocate clusters
             for (int i = 0; i < freeClusters.Count; i++)
             {
-                fatTable[freeClusters[i]] = (i == freeClusters.Count - 1) ? "EOF" : freeClusters[i + 1].ToString();
+                //fatTable[freeClusters[i]] = (i == freeClusters.Count - 1) ? "EOF" : freeClusters[i + 1].ToString();
+                if (i == freeClusters.Count - 1)
+                {
+                    fatTable[freeClusters[i]] = "EOF";
+                }
+                else
+                {
+                    fatTable[freeClusters[i]] = freeClusters[i + 1].ToString();
+                }
+
             }
 
             files.Add(freeClusters[0], fileName);
@@ -61,12 +71,20 @@ namespace File_System
 
         public string GetFileSystemInfo()
         {
-            int freeClusters = fatTable.FindAll(x => x == "FREE").Count;
-            return $"FAT File System\n" +
-                   $"Cluster Size: {clusterSize} bytes\n" +
-                   $"Total Clusters: {maxClusters}\n" +
-                   $"Free Clusters: {freeClusters}\n" +
-                   $"Used Clusters: {maxClusters - freeClusters}\n" +
+            //int freeClusters = fatTable.FindAll(x => x == "FREE").Count;
+            int freeClusters = 0;
+            foreach (string entry in fatTable)
+            {
+                if (entry == "FREE")
+                {
+                    freeClusters++;
+                }
+            }
+
+            return $"Cluster Size: {clusterSize} bytes\t" +
+                   $"Total Clusters: {maxClusters}\t" +
+                   $"Free Clusters: {freeClusters}\t" +
+                   $"Used Clusters: {maxClusters - freeClusters}\t" +
                    $"Files: {files.Count}";
         }
     }
