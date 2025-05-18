@@ -12,8 +12,8 @@ namespace File_System
 {
     public partial class MainForm : Form
     {
-        private FAT fat;
-        private InodeBasedFS inodeFS;
+        public FAT fat;
+        public InodeBasedFS inodeFS;
 
         public MainForm()
         {
@@ -23,7 +23,7 @@ namespace File_System
             UpdateDisplay();
         }
 
-        private void btnCreateFATFile_Click(object sender, EventArgs e)
+        public void btnCreateFATFile_Click(object sender, EventArgs e)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace File_System
             }
         }
 
-        private void btnCreateInodeFile_Click(object sender, EventArgs e)
+        public void btnCreateInodeFile_Click(object sender, EventArgs e)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace File_System
             }
         }
 
-        private void UpdateDisplay()
+        public void UpdateDisplay()
         {
             txtFATInfo.Text = fat.GetFileSystemInfo();
             txtInodeInfo.Text = inodeFS.GetFileSystemInfo();

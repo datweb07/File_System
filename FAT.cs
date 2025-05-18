@@ -8,10 +8,10 @@ namespace File_System
 {
     public class FAT
     {
-        private List<string> fatTable;
-        private Dictionary<int, string> files;
-        private int clusterSize;
-        private int maxClusters;
+        public List<string> fatTable;
+        public Dictionary<int, string> files;
+        public int clusterSize;
+        public int maxClusters;
 
         public FAT(int clusterSize = 4096, int maxClusters = 100)
         {
@@ -22,7 +22,7 @@ namespace File_System
             InitializeFAT();
         }
 
-        private void InitializeFAT()
+        public void InitializeFAT()
         {
             for (int i = 0; i < maxClusters; i++)
             {
@@ -32,6 +32,7 @@ namespace File_System
 
         public bool CreateFile(string fileName, int size)
         {
+            // Math.Ceiling làm tròn lên số nguyên gấn nhất (nếu có phần thập phân)
             int clustersNeeded = (int)Math.Ceiling((double)size / clusterSize);
             List<int> freeClusters = new List<int>();
 
@@ -81,8 +82,7 @@ namespace File_System
                    $"Cluster Size: {clusterSize} bytes\n" +
                    $"Total Clusters: {maxClusters}\n" +
                    $"Free Clusters: {freeClusters}\n" +
-                   $"Used Clusters: {maxClusters - freeClusters}\n" +
-                   $"Files: {files.Count}";
+                   $"Used Clusters: {maxClusters - freeClusters}\n";
         }
     }
 }
