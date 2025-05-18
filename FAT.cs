@@ -52,7 +52,14 @@ namespace File_System
             // Allocate clusters
             for (int i = 0; i < freeClusters.Count; i++)
             {
-                fatTable[freeClusters[i]] = (i == freeClusters.Count - 1) ? "EOF" : freeClusters[i + 1].ToString();
+                if (i == freeClusters.Count - 1)
+                {
+                    fatTable[freeClusters[i]] = "EOF";
+                }
+                else
+                {
+                    fatTable[freeClusters[i]] = freeClusters[i + 1].ToString();
+                }
             }
 
             files.Add(freeClusters[0], fileName);
@@ -61,7 +68,15 @@ namespace File_System
 
         public string GetFileSystemInfo()
         {
-            int freeClusters = fatTable.FindAll(x => x == "FREE").Count;
+            int freeClusters = 0;
+            foreach (string entry in fatTable)
+            {
+                if (entry == "FREE")
+                {
+                    freeClusters++;
+                }
+            }
+
             return $"FAT File System\n" +
                    $"Cluster Size: {clusterSize} bytes\n" +
                    $"Total Clusters: {maxClusters}\n" +
