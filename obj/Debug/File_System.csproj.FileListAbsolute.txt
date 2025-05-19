@@ -8,3 +8,4 @@ C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.csproj.Generat
 C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.csproj.CoreCompileInputs.cache
 C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.exe
 C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.pdb
+C:\Users\THANH DAT\source\repos\File_System\obj\Debug\File_System.exe.config

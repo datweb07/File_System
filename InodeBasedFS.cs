@@ -5,8 +5,9 @@ namespace File_System
 {
     public class InodeBasedFS
     {
-        public List<Inode> inodes;   // Danh sách các inode (danh sách các file đã tạo)
-        public bool[] blockMap;      // Bảng ánh xạ block (true nếu block đã được cấp phát, false nếu chưa)
+        public List<Inode> inodes;                          // Danh sách các inode (danh sách các file đã tạo)
+        public Dictionary<string, string> fileContents;     // Dữ liệu của files (key: tên file, value: nội dung file)
+        public bool[] blockMap;                             // Bảng ánh xạ block (true nếu block đã được cấp phát, false nếu chưa)
         public int blockSize;
         public int maxBlocks;
 
@@ -15,16 +16,19 @@ namespace File_System
             this.blockSize = blockSize;
             this.maxBlocks = maxBlocks;
             inodes = new List<Inode>();
+            fileContents = new Dictionary<string, string>();
             blockMap = new bool[maxBlocks];
         }
 
         // Tạo file và cấp phát block nếu đủ bộ nhớ
         public bool CreateFile(string fileName, int size)
         {
-            int blocksNeeded = (int)Math.Ceiling((double)size / blockSize);   // Tinh số block cần thiết
-            List<int> freeBlocks = new List<int>();
+            // Tinh số block cần thiết
+            int blocksNeeded = (int)Math.Ceiling((double)size / blockSize);
 
-            // Tìm block trống
+            List<int> freeBlocks = new List<int>();                                // Tạo danh sách các block còn trống
+
+            // Tìm các block trống
             for (int i = 0; i < maxBlocks && freeBlocks.Count < blocksNeeded; i++)
             {
                 if (!blockMap[i])
@@ -33,41 +37,131 @@ namespace File_System
                 }
             }
 
-            if (freeBlocks.Count < blocksNeeded)
-            {
-                return false; // Nếu không đủ bộ nhớ trả về false
+            // Kiểm tra có đủ block hay không
+            if (freeBlocks.Count < blocksNeeded) 
+            { 
+                return false; 
             }
 
+            // Tạo inode và gán block
             Inode inode = new Inode(fileName, size);
             foreach (int block in freeBlocks)
             {
-                // Cấp phát block cho file và tạo inode
-                blockMap[block] = true;
-                inode.Blocks.Add(block);
+                blockMap[block] = true;       // Đánh dấu block đã được sử dụng
+                inode.Blocks.Add(block);      // Ghi block vào inode
             }
 
             // Thêm inode vào danh sách inode
             inodes.Add(inode);
+
+            // Khởi tạo nội dung file rỗng
+            fileContents[fileName] = "";
             return true;
         }
 
-        // In ra các thông số của IBFS
-        public string GetFileSystemInfo()
+        // Xóa file và giải phóng block
+        public bool DeleteFile(string fileName)
         {
-            int freeBlocks = 0;
-            foreach (bool block in blockMap)
+            Inode inode = null;
+
+            // Tìm inode tương ứng với tên file
+            foreach (Inode i in inodes)
             {
-                if (!block) 
-                { 
-                    freeBlocks++; 
+                if (i.FileName == fileName)
+                {
+                    inode = i;
+                    break;
                 }
             }
 
-            return $"Block Size: {blockSize} bytes\t" +
-                   $"Total Blocks: {maxBlocks}\t" +
-                   $"Free Blocks: {freeBlocks}\t" +
-                   $"Used Blocks: {maxBlocks - freeBlocks}\t" +
+            if (inode == null) 
+            { 
+                return false; 
+            }
+
+            // Giải phóng các block đã cấp phát cho file    
+            foreach (int block in inode.Blocks)
+            {
+                blockMap[block] = false;
+            }
+
+            // Xóa inode và nội dung file khỏi danh sách
+            inodes.Remove(inode);
+            fileContents.Remove(fileName);
+            return true;
+        }
+
+        // Hiển thị thông tin file
+        public string GetFileSystemInfo()
+        {
+            int freeBlocks = 0;
+            foreach (bool b in blockMap)
+            {
+                if (!b)
+                {
+                    freeBlocks++;
+                }
+            }
+            return $"Block Size: {blockSize} bytes\n" +
+                   $"Total Blocks: {maxBlocks}\n" +
+                   $"Free Blocks: {freeBlocks}\n" +
+                   $"Used Blocks: {maxBlocks - freeBlocks}\n" +
                    $"Files: {inodes.Count}";
+        }
+
+        // Mô phỏng bộ nhớ
+        public string GetMemory()
+        {
+            string result = "";
+            foreach (bool b in blockMap)
+            {
+                if (b)
+                {
+                    result += "U";    // Đã được sử dụng
+                }
+                else
+                {
+                    result += "F";    // Còn trống
+                }
+            }
+            return result;
+
+
+        }
+
+        // Danh sách các file đã tạo
+        public List<string> GetFileList()
+        {
+            List<string> fileNames = new List<string>();
+            foreach (Inode i in inodes)
+            {
+                fileNames.Add(i.FileName);
+            }
+            return fileNames;
+        }
+
+        // Đọc nội dung file
+        public string ReadFile(string fileName)
+        {
+            string data;
+            bool found = fileContents.TryGetValue(fileName, out data);
+            if (found)
+            {
+                return data;
+            }
+            else
+            {
+                return "Empty contents";
+            }
+        }
+
+        // Viết nội dung vào file
+        public void WriteToFile(string fileName, string content)
+        {
+            if (fileContents.ContainsKey(fileName))
+            {
+                fileContents[fileName] = content;
+            }
         }
     }
 }
