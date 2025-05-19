@@ -164,7 +164,7 @@ namespace File_System
             }
             else
             {
-                return "[Empty or Not Found]";
+                return "Empty contents";
             }
         }
 
