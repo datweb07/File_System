@@ -5,6 +5,7 @@ namespace File_System
 {
     public partial class MainForm : Form
     {
+        // Khai báo các biến cho FAT và Inode-based FS
         public FAT fat;
         public InodeBasedFS inodeFS;
 
@@ -62,8 +63,8 @@ namespace File_System
 
         public void UpdateDisplay()
         {
-            txtFATInfo.Text = fat.GetFileSystemInfo();
-            txtInodeInfo.Text = inodeFS.GetFileSystemInfo();
+            txtFATInfo.Text = fat.GetFileSystemInfo();         // Hiển thị thông tin FAT
+            txtInodeInfo.Text = inodeFS.GetFileSystemInfo();   // Hiển thị thông tin Inode-based FS
         }
     }
 }

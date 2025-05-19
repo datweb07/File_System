@@ -5,8 +5,8 @@ namespace File_System
 {
     public class InodeBasedFS
     {
-        public List<Inode> inodes;
-        public bool[] blockMap;
+        public List<Inode> inodes;   // Danh sách các inode (danh sách các file đã tạo)
+        public bool[] blockMap;      // Bảng ánh xạ block (true nếu block đã được cấp phát, false nếu chưa)
         public int blockSize;
         public int maxBlocks;
 
@@ -18,10 +18,10 @@ namespace File_System
             blockMap = new bool[maxBlocks];
         }
 
-        // Tạo file IBFS
+        // Tạo file và cấp phát block nếu đủ bộ nhớ
         public bool CreateFile(string fileName, int size)
         {
-            int blocksNeeded = (int)Math.Ceiling((double)size / blockSize);
+            int blocksNeeded = (int)Math.Ceiling((double)size / blockSize);   // Tinh số block cần thiết
             List<int> freeBlocks = new List<int>();
 
             // Tìm block trống
@@ -35,17 +35,18 @@ namespace File_System
 
             if (freeBlocks.Count < blocksNeeded)
             {
-                return false; // Không đủ bộ nhớ trống
+                return false; // Nếu không đủ bộ nhớ trả về false
             }
 
-            // Allocate blocks
             Inode inode = new Inode(fileName, size);
             foreach (int block in freeBlocks)
             {
+                // Cấp phát block cho file và tạo inode
                 blockMap[block] = true;
                 inode.Blocks.Add(block);
             }
 
+            // Thêm inode vào danh sách inode
             inodes.Add(inode);
             return true;
         }
